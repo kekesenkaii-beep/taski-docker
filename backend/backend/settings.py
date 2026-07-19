@@ -1,16 +1,31 @@
 import os
 from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent.parent
 
+def get_env_list(name, default=''):
+    return [
+        value.strip()
+        for value in os.getenv(name, default).split(',')
+        if value.strip()
+    ]
+
+
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '123.123.123.123', 'kekesenkaii-beep.ddns.net']
+ALLOWED_HOSTS = get_env_list(
+    'ALLOWED_HOSTS',
+    'localhost,127.0.0.1',
+)
 
+CSRF_TRUSTED_ORIGINS = get_env_list(
+    'CSRF_TRUSTED_ORIGINS',
+)
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # Application definition
 
 INSTALLED_APPS = [
